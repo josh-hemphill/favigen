@@ -1,0 +1,118 @@
+import { IconPlatforms,IconOptions } from './defaults.js';
+
+export const platformDefaults = <Record<IconPlatforms,Partial<Exclude<IconOptions,boolean>>>>{
+	android: {
+		platformName: 'android-chrome',
+		sizes: [
+			{ 'width': 36, 'height': 36 },
+			{ 'width': 48, 'height': 48 },
+			{ 'width': 72, 'height': 72 },
+			{ 'width': 96, 'height': 96 },
+			{ 'width': 144, 'height': 144 },
+			{ 'width': 192, 'height': 192 },
+			{ 'width': 256, 'height': 256 },
+			{ 'width': 384, 'height': 384 },
+			{ 'width': 512, 'height': 512 },
+		],
+	},
+	appleIcon: {
+		platformName: 'apple-touch-icon',
+		nameSeparator: '-',
+		transparent: false,
+		background: true,
+		sizes: [
+			{ 'width': 57, 'height': 57 },
+			{ 'width': 60, 'height': 60 },
+			{ 'width': 72, 'height': 72 },
+			{ 'width': 76, 'height': 76 },
+			{ 'width': 114, 'height': 114 },
+			{ 'width': 120, 'height': 120 },
+			{ 'width': 144, 'height': 144 },
+			{ 'width': 152, 'height': 152 },
+			{ 'width': 167, 'height': 167 },
+			{ 'width': 180, 'height': 180 },
+			{ 'width': 1024, 'height': 1024 },
+			{
+				templateNameOverride: '{{platformName}}',
+				'width': 180, 'height': 180,
+			},
+			{
+				templateNameOverride: '{{platformName}}-precomposed',
+				'width': 180, 'height': 180,
+			},
+		],
+	},
+	appleStartup: {
+		platformName: 'apple-touch-startup-image',
+		nameSeparator: '-',
+		transparent: false,
+		background: true,
+		sizes: [
+			{ 'width': 320,'height': 460, htmlMediaContent: '(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)'},
+			{ 'width': 640, 'height': 920, htmlMediaContent: '(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)'},
+			{ 'width': 640, 'height': 1096, htmlMediaContent: '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'},
+			{ 'width': 750, 'height': 1294, htmlMediaContent: '(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)'},
+			{ 'width': 1182, 'height': 2208, htmlMediaContent: '(device-width: 414px) and (device-height: 736px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3)'},
+			{ 'width': 1242, 'height': 2148, htmlMediaContent: '(device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3)'},
+			{ 'width': 748, 'height': 1024, htmlMediaContent: '(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 1)'},
+			{ 'width': 1496, 'height': 2048, htmlMediaContent: '(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)'},
+			{ 'width': 768, 'height': 1004, htmlMediaContent: '(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 1)'},
+			{ 'width': 1536, 'height': 2008, htmlMediaContent: '(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)'},
+		],
+	},
+	coast: {
+		platformName: 'coast',
+		nameSeparator: '-',
+		transparent: false,
+		background: true,
+		sizes: [
+			{ 'width': 228, 'height': 228 },
+		],
+	},
+	favicons: {
+		platformName: 'favicon',
+		nameSeparator: '-',
+		sizes: [
+			{ 'width': 16, 'height': 16 },
+			{ 'width': 32, 'height': 32 },
+			{ 'width': 48, 'height': 48 },
+			{ 'width': 64, 'height': 64 },
+			{ 'width': 16, 'height': 16, type: 'ico' },
+			{ 'width': 24, 'height': 24, type: 'ico' },
+			{ 'width': 32, 'height': 32, type: 'ico' },
+			{ 'width': 48, 'height': 48, type: 'ico' },
+			{ 'width': 64, 'height': 64, type: 'ico' },
+		],
+	},
+	firefox: {
+		platformName: 'firefox_app',
+		nameSeparator: '_',
+		transparent: false,
+		background: true,
+		mask: true,
+		overlayGlow: true,
+		sizes: [
+			{ 'width': 60, 'height': 60 },
+			{ 'width': 128, 'height': 128 },
+			{ 'width': 512, 'height': 512 },
+		],
+	},
+	windows: {
+		platformName: 'mstile',
+		nameSeparator: '-',
+		sizes: [
+			{ 'width': 70, 'height': 70 },
+			{ 'width': 144, 'height': 144 },
+			{ 'width': 150, 'height': 150 },
+			{ 'width': 310, 'height': 150 },
+			{ 'width': 310, 'height': 310 },
+		],
+	},
+	yandex: {
+		platformName: 'yandex-browser',
+		nameSeparator: '-',
+		sizes: [
+			{ 'width': 50, 'height': 50 },
+		],
+	},
+};
