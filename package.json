@@ -1,7 +1,7 @@
 {
 	"name": "favigen",
 	"version": "1.1.5",
-	"description": "Provides type information for all CSP directives and related headers' directives; as well as a basic utility funtion that helps convert the typed properties to the header content's policy string.",
+	"description": "Library-first favicon and web app icon generator for bundlers and other integrating applications.",
 	"type": "module",
 	"scripts": {
 		"dev": "npm run build -- --watch",
@@ -36,14 +36,15 @@
 		"url": "git+https://github.com/josh-hemphill/favigen.git"
 	},
 	"keywords": [
-		"CSP",
-		"CSPs",
-		"content-security-policy",
-		"header",
-		"security",
-		"generate",
-		"directive",
-		"types",
+		"favicon",
+		"favicons",
+		"icons",
+		"pwa",
+		"manifest",
+		"webmanifest",
+		"generator",
+		"library",
+		"bundler",
 		"typescript"
 	],
 	"maintainers": [

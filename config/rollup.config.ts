@@ -5,7 +5,7 @@ const pkg = JSON.parse(readFileSync('./package.json',{encoding:'utf-8'}));
 import { terser } from 'rollup-plugin-terser';
 import { ModuleFormat, OutputOptions, RollupOptions } from 'rollup';
 const dist = './dist/';
-const input = 'src/lib/index.ts';
+const input = 'src/index.ts';
 const out = (format: ModuleFormat): OutputOptions => ({
 	format,
 	exports: 'auto',
@@ -29,7 +29,7 @@ export default <RollupOptions[]>[
 						'**/*.test.*',
 					],
 					compilerOptions: {
-						rootDir: './src/lib',
+						rootDir: './src',
 					},
 					declarationDir: './dist',
 				},
