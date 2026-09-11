@@ -1,3 +1,5 @@
+import { PlatformIconChoice } from './types.js';
+
 type NString = string | null
 
 export type Display = 'fullscreen' | 'standalone' | 'minimal-ui' | 'browser'
@@ -5,7 +7,7 @@ export type Orientation = 'any' | 'natural' | 'portrait' | 'landscape'
 export type AppleStatusBarStyle = 'black-translucent' | 'default' | 'black'
 export type IconOptions = typeof defaultIconOptions | boolean
 
-type URL = null | `https://${string}`
+type URL = null | `https://${string}` | string
 
 export const iconPlatforms = [
 	'android',
@@ -18,6 +20,19 @@ export const iconPlatforms = [
 	'yandex',
 ] as const;
 export type IconPlatforms = typeof iconPlatforms[number]
+
+export const defaultOutput = {
+	images: true,
+	files: true,
+	html: true,
+};
+
+export const defaultFiles = {
+	android: { manifestFileName: 'manifest.webmanifest' },
+	windows: { manifestFileName: 'browserconfig.xml' },
+	yandex: { manifestFileName: 'yandex-browser-manifest.json' },
+	firefox: { manifestFileName: 'manifest.webapp' },
+};
 
 export const defaultOptions = {
 	path: '/',
@@ -33,23 +48,28 @@ export const defaultOptions = {
 	appleStatusBarStyle: <AppleStatusBarStyle> 'black-translucent',
 	display: <Display> 'standalone',
 	orientation: <Orientation> 'any',
-	scope: <URL | URL[]> '',
+	scope: <URL | URL[]> '/',
 	start_url: '/?homescreen=1',
 	version: '1.0',
 	logging: false,
 	pixel_art: false,
 	loadManifestWithCredentials: false,
 	manifestRelativePaths: false,
-	icons: <Record<IconPlatforms,IconOptions>> {
+	cacheBustingQueryParam: <string | null> null,
+	preferRelatedApplications: false,
+	relatedApplications: <{ platform?: string; url?: string; id?: string }[] | undefined> undefined,
+	icons: <Record<IconPlatforms, PlatformIconChoice>> {
 		android: true,
 		appleIcon: true,
 		appleStartup: true,
-		coast: true,
+		coast: false,
 		favicons: true,
-		firefox: true,
+		firefox: false,
 		windows: true,
 		yandex: true,
 	},
+	files: defaultFiles,
+	output: defaultOutput,
 };
 
 export type ImgTypes = 'ico' | 'png'
@@ -78,7 +98,7 @@ export const defaultIconOptions = {
 	htmlMediaContent: <string | undefined>undefined,
 	transparent: <boolean | undefined>true,
 	/** true - force, e.g. set background for Android icons */
-	background: false,
+	background: <string | boolean> false,
 	offset: 0,
 	rotate: <boolean | undefined>false,
 	/** apply mask in order to create circle icon (applied by default for firefox). */
@@ -88,3 +108,13 @@ export const defaultIconOptions = {
 	/** apply drop shadow after mask has been applied */
 	overlayShadow: <boolean | undefined>false,
 };
+
+export type UserOptions = Omit<Partial<typeof defaultOptions>, 'icons' | 'files' | 'output'> & {
+	icons?: Partial<Record<IconPlatforms, PlatformIconChoice>>;
+	files?: Partial<typeof defaultFiles>;
+	output?: Partial<typeof defaultOutput>;
+}
+
+export type ResolvedOptions = Omit<typeof defaultOptions, 'icons'> & {
+	icons: Record<IconPlatforms, PlatformIconChoice>;
+}
