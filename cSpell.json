@@ -71,14 +71,22 @@
         "vinyl",
         "xmlbuilder",
         "webmanifest",
-        "webpack"
+        "webpack",
+        "Colourspace",
+        "EXIF",
+        "hypot",
+        "IDAT",
+        "libvips",
+        "multiplane",
+        "multipage",
+        "wordmark"
     ],
     "flagWords": [
         "hte"
     ],
     "ignorePaths": [
         "package.json",
-        "package-lock.json",
+        "pnpm-lock.yaml",
         "yarn.lock",
         "tsconfig.json",
         "node_modules/**"

@@ -1,6 +1,6 @@
 ---
 name: "\U0001F680 Feature Request"
-about: I have an idea for Vite-Plugin-Favicon
+about: I have an idea for Favigen
 title: '[Enhance]: %s'
 labels: [feature, feature_request]
 assignees: 'josh-hemphill'
@@ -9,13 +9,13 @@ assignees: 'josh-hemphill'
 
 <!--
 
-Have you read Vite-Plugin-Favicon's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/josh-hemphill/vite-plugin-favicon/.github/CODE_OF_CONDUCT.md
+Please follow the [Favigen Code of Conduct](../CODE_OF_CONDUCT.md) when filing an issue.
 
 -->
 
 ### Prerequisites
 
-  - [ ] I have searched through existing issues
+- [ ] I have searched through existing issues
 
 ## Feature Request
 

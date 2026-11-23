@@ -234,7 +234,7 @@ export function planIcons (source: PreparedSource, options: PlanOptions = {}): I
 			id, name, role: preset.role, purpose: preset.purpose, sizes,
 			mimeType: preset.ico ? 'image/vnd.microsoft.icon' : 'image/png',
 			sourceId: artwork.id,
-			recipeKey: preset.ico ? digest(JSON.stringify(['favigen-ico-1', planes.map((plane) => plane.key)])) : planes[0].key,
+			recipeKey: preset.ico ? digest(JSON.stringify(['favigen-ico-2', planes.map((plane) => plane.key)])) : planes[0].key,
 		});
 		targets.set(id, { spec, source: artwork, planes });
 

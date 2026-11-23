@@ -1,32 +1,22 @@
 {
 	"name": "favigen",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Library-first favicon and web app icon generator for bundlers and other integrating applications.",
 	"type": "module",
 	"scripts": {
-		"pre-push": "npm run build && npm test",
 		"build": "node scripts/build.mjs",
-		"log": "conventional-changelog -p angular -i CHANGELOG.md -s",
-		"lint": "run-s lint:*",
-		"lint:typescript": "eslint src --ext .ts --fix",
-		"lint:markdown": "markdownlint-cli2-fix \"**/*.md\" \"#node_modules\" \"#CHANGELOG.md\"",
-		"test": "npm run typecheck && npm run test:unit",
-		"test:lint": "eslint src --ext .ts",
+		"prepack": "node scripts/build.mjs",
+		"prepublishOnly": "pnpm test",
+		"test": "pnpm run typecheck && pnpm run test:unit",
+		"test:unit": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config config/jest.config.cjs --runInBand --coverage",
+		"watch:test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config config/jest.config.cjs --watch",
+		"typecheck": "tsc --noEmit",
+		"lint": "eslint src",
+		"test:lint": "eslint src",
 		"test:markdown": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#CHANGELOG.md\"",
 		"test:spelling": "cspell --config ./cSpell.json \"{README.md,.github/*.md,src/**/*.ts,docs/**/*.md}\"",
-		"test:unit": "jest --config config/jest.config.cjs --runInBand --coverage",
-		"watch:test": "jest --config config/jest.config.cjs --watch",
-		"doc": "run-s doc:html && open-cli build/docs/index.html",
 		"doc:html": "typedoc --entryPoints src/index.ts --out build/docs",
-		"doc:json": "typedoc --entryPoints src/index.ts --json build/docs/typedoc.json",
-		"reset-hard": "git clean -dfx && git reset --hard && npm i",
-		"ci:validate": "rm -rf node_modules && npm ci && npm run test",
-		"prepublishOnly": "npm run build && npm run typecheck && npm run test:unit",
-		"install:husky": "is-ci || husky install",
-		"pinst:disable": "pinst --disable",
-		"postpublish": "pinst --enable",
-		"typecheck": "tsc --noEmit",
-		"prepack": "npm run build"
+		"doc:json": "typedoc --entryPoints src/index.ts --json build/docs/typedoc.json"
 	},
 	"repository": {
 		"type": "git",
@@ -85,73 +75,28 @@
 		}
 	},
 	"dependencies": {
-		"jimp": "^0.16.1",
-		"to-ico": "^1.1.5",
-		"xmlbuilder2": "^2.4.1",
+		"jimp": "^1.7.0",
+		"xmlbuilder2": "^4.0.3",
 		"sharp": "0.35.5",
-		"@xmldom/xmldom": "^0.9.9",
+		"@xmldom/xmldom": "^0.9.12",
 		"subslate": "^1.0.0"
 	},
 	"types": "./dist/index.d.ts",
 	"devDependencies": {
-		"@babel/core": "^7.14.2",
-		"@babel/preset-env": "^7.14.2",
-		"@commitlint/cli": "^12.1.1",
-		"@commitlint/config-conventional": "^12.1.1",
-		"@semantic-release/changelog": "^5.0.1",
-		"@semantic-release/git": "^9.0.0",
-		"@semantic-release/npm": "^7.1.3",
-		"@types/jest": "^29.5.14",
-		"@types/node": "^22.18.0",
-		"@types/to-ico": "^1.1.0",
-		"@typescript-eslint/eslint-plugin": "^4.22.0",
-		"@typescript-eslint/parser": "^4.22.0",
-		"codecov": "^3.8.2",
-		"commitizen": "^4.2.3",
-		"conventional-changelog-cli": "^2.1.1",
-		"cspell": "^5.3.12",
-		"cz-conventional-changelog": "^3.2.0",
-		"eslint": "^7.25.0",
-		"eslint-plugin-import": "^2.22.1",
-		"eslint-plugin-jest": "^24.3.6",
-		"eslint-plugin-node": "^11.1.0",
-		"eslint-plugin-promise": "^5.1.0",
-		"gh-pages": "^3.1.0",
-		"husky": "^5.2.0",
-		"jest": "^29.7.0",
-		"lint-staged": "^10.5.4",
-		"markdownlint-cli2": "^0.1.3",
-		"npm-run-all": "^4.1.5",
-		"open-cli": "^6.0.1",
-		"pinst": "^2.1.6",
-		"rimraf": "^3.0.2",
-		"semantic-release": "^17.4.2",
-		"semantic-release-license": "^1.0.2",
-		"ts-jest": "^29.4.5",
-		"typedoc": "^0.28.14",
-		"typescript": "~5.9.3"
-	},
-	"config": {
-		"commitizen": {
-			"path": "cz-conventional-changelog"
-		}
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "lint-staged",
-			"pre-push": "npm run test"
-		}
-	},
-	"eslintConfig": {
-		"extends": "./config/.eslintrc.json"
-	},
-	"lint-staged": {
-		"*.js": [
-			"eslint --cache --fix",
-			"git add ."
-		]
+		"@eslint/js": "^10.0.1",
+		"@types/jest": "^30.0.0",
+		"@types/node": "^22.20.5",
+		"cspell": "^10.5.2",
+		"eslint": "^10.15.0",
+		"jest": "^30.5.2",
+		"markdownlint-cli2": "^0.24.2",
+		"ts-jest": "^29.4.15",
+		"typedoc": "^0.28.20",
+		"typescript": "~6.0.3",
+		"typescript-eslint": "^8.73.0"
 	},
 	"engines": {
 		"node": ">=22.12.0"
-	}
+	},
+	"packageManager": "pnpm@10.34.9"
 }

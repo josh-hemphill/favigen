@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1 (2026-11-22)
+
+- Update Jimp, XML handling, TypeScript, Jest, and lint tooling. Remove the standalone ICO encoding dependency.
+- Use a frozen pnpm lockfile in CI and smoke-test the packed ESM and CommonJS library with pnpm and npm, including Sharp WebAssembly.
+- Keep positional resize and contain calls working in legacy image hooks. Use PNG-compressed ICO frames and include an alpha channel even when the canvas is opaque. Quarter-turn rotation now preserves the dimensions of square canvases.
+
 ## 1.2.0 (2026-11-22)
 
 First GitHub release of the Favigen library.

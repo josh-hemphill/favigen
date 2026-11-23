@@ -1,4 +1,4 @@
-import Jimp from 'jimp';
+import { Jimp, JimpMime } from 'jimp';
 import { UserOptions } from '../src/defaults.js';
 import { PlatformIconChoice } from '../src/types.js';
 
@@ -24,15 +24,16 @@ export function onlyIcons (icons: Record<string, PlatformIconChoice>): UserOptio
 
 /** Build a small source PNG so tests do not depend on an external fixture file. */
 export async function makeLogoBuffer (size = 64): Promise<Buffer> {
-	const img = await Jimp.create(size, size, 0x2266CCFF);
-	const inner = await Jimp.create(Math.floor(size * 0.6), Math.floor(size * 0.6), 0xFFFFFFFF);
+	const img = new Jimp({ width: size, height: size, color: 0x2266CCFF });
+	const innerSide = Math.floor(size * 0.6);
+	const inner = new Jimp({ width: innerSide, height: innerSide, color: 0xFFFFFFFF });
 	img.composite(inner, Math.floor(size * 0.2), Math.floor(size * 0.2));
-	return img.getBufferAsync(Jimp.MIME_PNG);
+	return img.getBuffer(JimpMime.png);
 }
 
 export async function readPngSize (contents: Buffer): Promise<{ width: number; height: number }> {
 	const img = await Jimp.read(contents);
-	return { width: img.getWidth(), height: img.getHeight() };
+	return { width: img.width, height: img.height };
 }
 
 export function icoImageCount (contents: Buffer): number {
