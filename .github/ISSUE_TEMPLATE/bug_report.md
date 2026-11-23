@@ -8,14 +8,14 @@ assignees: 'josh-hemphill'
 
 <!--
 
-Have you read Vite-Plugin-Favicon's Code of Conduct? By filing an Issue, you are expected to comply with it, including treating everyone with respect: https://github.com/josh-hemphill/vite-plugin-favicon/.github/CODE_OF_CONDUCT.md
+Please follow the [Favigen Code of Conduct](../CODE_OF_CONDUCT.md) when filing an issue.
 
 -->
 
 ### Prerequisites
 
-  * [ ] Reproduced the problem in a sandbox or repo: <https://codepen.io>
-  * [ ] Checked that your issue isn't already filed: <https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/vite-plugin-favicon>
+* [ ] Reproduced the problem in a sandbox or repo: <https://codepen.io>
+* [ ] Checked that your issue isn't already filed: <https://github.com/josh-hemphill/favigen/issues?q=is%3Aissue>
 
 ### Description
 
@@ -41,12 +41,12 @@ Have you read Vite-Plugin-Favicon's Code of Conduct? By filing an Issue, you are
 
 ### Versions
 
-|||
-| --------- | --- |
-| Platform: |     |
-| Version:  |     |
-| Editor(v):|     |
-| OS:       |     |
+| Field    | Value |
+| -------- | ----- |
+| Platform |       |
+| Version  |       |
+| Editor   |       |
+| OS       |       |
 
 ### Additional Information
 

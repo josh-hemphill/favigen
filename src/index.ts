@@ -1,6 +1,6 @@
-import { resolve as resolvePath } from 'path';
-import Jimp from 'jimp';
-import toIco from 'to-ico';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { Jimp } from 'jimp';
 import {
 	defaultIconOptions,
 	defaultIconSize,
@@ -13,6 +13,9 @@ import {
 } from './defaults.js';
 import { generateIcon } from './generate-icon.js';
 import { getHtmlDefaults } from './html-defaults.js';
+import { encodeIco } from './ico.js';
+import { legacyImage } from './legacy-image.js';
+import type { LegacyImage } from './legacy-image.js';
 import { getManifestDefaults, serializeManifests } from './manifests-defaults.js';
 import { platformDefaults } from './platform-defaults.js';
 import {
@@ -39,9 +42,9 @@ export const config = {
 	platforms: platformDefaults,
 };
 
-type Image = Jimp
+type Image = LegacyImage
 type AfterCreateHook = (icon: IconResult, iconDef: NormalizedIcons) => void
-type AlterImgHook = (img: Jimp, def: IconSize & NormalizedIcons, runBuiltinTransforms: () => void) => void
+type AlterImgHook = (img: LegacyImage, def: IconSize & NormalizedIcons, runBuiltinTransforms: () => void) => void
 export type FavigenSource = string | Buffer | ArrayBuffer
 
 const resolveAll = async <T>(arr: (T | Promise<T>)[]) => Promise.all(arr);
@@ -84,21 +87,16 @@ function assertSource (source: unknown): asserts source is FavigenSource {
 	}
 }
 
-function loadSource (source: FavigenSource): Promise<Image> {
-	if (typeof source === 'string') {
-		return Jimp.read(resolvePath(process.cwd(), source)).catch((error: unknown) => {
-			const err = error as NodeJS.ErrnoException;
-			if (err?.code === 'ENOENT') throw error;
-			throw new Error('Invalid image buffer');
-		});
+async function loadSource (source: FavigenSource): Promise<Image> {
+	try {
+		const bytes = typeof source === 'string'
+			? await readFile(resolve(source))
+			: source instanceof ArrayBuffer ? Buffer.from(source) : source;
+		return legacyImage(await Jimp.fromBuffer(bytes));
+	} catch (error) {
+		if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') throw error;
+		throw new Error('Invalid image buffer', { cause: error });
 	}
-	const buffer = source instanceof ArrayBuffer ? Buffer.from(source) : source;
-	if (!buffer.length) {
-		return Promise.reject(new Error('Invalid image buffer'));
-	}
-	return Jimp.read(buffer).catch(() => {
-		throw new Error('Invalid image buffer');
-	});
 }
 
 function resolveOptions (options: UserOptions = {}): ResolvedOptions {
@@ -297,7 +295,7 @@ export class Favigen {
 			if (!resSizedImgs.length) continue;
 
 			const finalIconImg = iconDef.type === 'ico'
-				? await toIco(resSizedImgs)
+				? encodeIco(resSizedImgs)
 				: resSizedImgs[0];
 
 			const iconResult: IconResult = {

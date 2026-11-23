@@ -37,8 +37,28 @@ describe('staged Favigen API', () => {
 			const length = ico.readUInt32LE(entry + 8);
 			expect(ico[entry]).toBe(size);
 			await expect(sharp(ico.subarray(offset, offset + length)).metadata())
-				.resolves.toMatchObject({ format: 'png', width: size, height: size });
+				.resolves.toMatchObject({ format: 'png', width: size, height: size, channels: 4 });
 		}
+	});
+
+	it('embeds RGBA frames for an opaque ICO while sharing raster work with standalone PNGs', async () => {
+		const ids = ['favicon.ico', 'favicon.32'];
+		const plan = planIcons(await prepareSource(svg), { ids, render: { background: '#123456' } });
+		const cache = createMemoryCache();
+		const writes = jest.spyOn(cache, 'set');
+		const [icon, png] = await renderIcons(plan, { cache });
+		expect(writes).toHaveBeenCalledTimes(4);
+		const ico = Buffer.from(icon.bytes);
+		for (let index = 0; index < ico.readUInt16LE(4); index++) {
+			const entry = 6 + index * 16;
+			const offset = ico.readUInt32LE(entry + 12);
+			const length = ico.readUInt32LE(entry + 8);
+			const frame = ico.subarray(offset, offset + length);
+			expect(ico.readUInt16LE(entry + 6)).toBe(32);
+			await expect(sharp(frame).metadata()).resolves.toMatchObject({ channels: 4, hasAlpha: true });
+			expect((await pixels(frame)).at(0, 0)).toEqual([18, 52, 86, 255]);
+		}
+		await expect(sharp(png.bytes).metadata()).resolves.toMatchObject({ channels: 3, hasAlpha: false });
 	});
 
 	it('rasterizes detail at target resolution and keeps maskable artwork inside the safe zone', async () => {

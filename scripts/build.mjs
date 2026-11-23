@@ -9,7 +9,7 @@ rmSync('dist', { recursive: true, force: true });
 execFileSync(process.execPath, [tsc, '-p', 'tsconfig.build.json', '--emitDeclarationOnly'], { stdio: 'inherit' });
 execFileSync(process.execPath, [
 	tsc, '-p', 'tsconfig.build.json', '--module', 'CommonJS', '--moduleResolution', 'node10',
-	'--outDir', 'dist/cjs',
+	'--ignoreDeprecations', '6.0', '--outDir', 'dist/cjs',
 ], { stdio: 'inherit' });
 writeFileSync('dist/cjs/package.json', '{"type":"commonjs"}\n');
 

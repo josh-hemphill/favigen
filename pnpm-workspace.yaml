@@ -1,0 +1,13 @@
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - sharp
+
+# Development tools currently pull in releases below the patched ranges.
+overrides:
+  '@jest/reporters>glob@<14.0.2': ^14.0.2
+  'jest-config>glob@<14.0.2': ^14.0.2
+  'jest-runtime>glob@<14.0.2': ^14.0.2
+  'test-exclude>glob@<14.0.2': ^14.0.2
+  'test-exclude>minimatch@<11.0.1': ^11.0.1
+  'typedoc>minimatch@<11.0.1': ^11.0.1
+  'micromark-extension-math>katex@<0.18.2': ^0.18.2

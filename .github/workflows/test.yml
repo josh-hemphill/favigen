@@ -31,28 +31,42 @@ jobs:
         runs-on: ${{ matrix.os }}
         steps:
             - uses: actions/checkout@v7.0.1
+            - uses: pnpm/action-setup@v6.1.1
             - uses: actions/setup-node@v7.1.0
               with:
                   node-version: ${{ matrix.node-version }}
-                  cache: npm
-            - run: npm ci
-            - run: npm test
+                  cache: pnpm
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm test
+            - name: Lint source and documentation
+              if: runner.os == 'Linux' && matrix.node-version == 24
+              run: |
+                  pnpm run lint
+                  pnpm run test:markdown
+                  pnpm run test:spelling
             - run: mkdir artifacts
-            - run: npm pack --pack-destination artifacts
+            - run: pnpm pack --pack-destination artifacts
             - run: node --input-type=module -e "import { prepareSource } from 'favigen'; if (typeof prepareSource !== 'function') process.exit(1)"
             - run: node -e "if (typeof require('favigen').prepareSource !== 'function') process.exit(1)"
-            - name: Smoke-test the packaged library with WebAssembly
+            - name: Smoke-test pnpm and npm consumers of the tarball
               if: runner.os == 'Linux' && matrix.node-version == 24
               shell: bash
               run: |
                   scratch=$(mktemp -d)
                   sharp_version=$(node -p 'require("./package.json").dependencies.sharp')
-                  npm install --prefix "$scratch" --omit=optional --ignore-scripts --no-audit --no-fund "$PWD"/artifacts/*.tgz "@img/sharp-wasm32@$sharp_version"
-                  cd "$scratch"
-                  node --input-type=module <<'NODE'
+                  package=("$PWD"/artifacts/*.tgz)
+                  mkdir "$scratch/pnpm" "$scratch/npm"
+                  pnpm --dir "$scratch/pnpm" add --no-optional --ignore-scripts "${package[0]}" "@img/sharp-wasm32@$sharp_version"
+                  npm install --prefix "$scratch/npm" --omit=optional --ignore-scripts --no-audit --no-fund "${package[0]}" "@img/sharp-wasm32@$sharp_version"
+                  for consumer in "$scratch/pnpm" "$scratch/npm"; do
+                    cd "$consumer"
+                    node --input-type=module <<'NODE'
                   import assert from 'node:assert/strict';
-                  import sharp from 'sharp';
+                  import { createRequire } from 'node:module';
                   import { planIcons, prepareSource, renderIcons } from 'favigen';
+                  const require = createRequire(import.meta.url);
+                  assert.equal(require('favigen').prepareSource, prepareSource);
+                  const sharp = createRequire(require.resolve('favigen'))('sharp');
                   assert.ok(sharp.versions.emscripten, 'Expected the WebAssembly renderer');
                   const art = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/></svg>');
                   const icons = await renderIcons(planIcons(await prepareSource(art), { ids: ['favicon.ico', 'favicon.32'] }));
@@ -61,6 +75,7 @@ jobs:
                   assert.equal(ico.readUInt16LE(4), 3);
                   assert.equal((await sharp(icons[1].bytes).metadata()).width, 32);
                   NODE
+                  done
             - name: Checksum the package
               if: runner.os == 'Linux' && matrix.node-version == 24
               working-directory: artifacts

@@ -2,8 +2,7 @@
 	"line-length": false,
 	"MD001": false,
 	"MD007": {
-		"indent": 2,
-		"start_indented": true
+		"indent": 2
 	},
 	"MD030": {
 		"ol_multi": 1,

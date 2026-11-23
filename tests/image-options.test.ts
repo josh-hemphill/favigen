@@ -1,5 +1,5 @@
-import Jimp from 'jimp';
-import { favigen } from '../src/index.js';
+import { Jimp, JimpMime, ResizeStrategy } from 'jimp';
+import { Favigen, favigen } from '../src/index.js';
 import { makeLogoBuffer, onlyIcons, readPngSize } from './helpers.js';
 
 describe('image conversion options', () => {
@@ -28,11 +28,30 @@ describe('image conversion options', () => {
 	});
 
 	it('uses nearest-neighbor scaling when pixel_art is enabled', async () => {
-		const source = await (await Jimp.create(8, 8, 0xFF0000FF)).getBufferAsync(Jimp.MIME_PNG);
+		const source = await new Jimp({ width: 8, height: 8, color: 0xFF0000FF }).getBuffer(JimpMime.png);
 		const { images } = await favigen(source, {
 			...onlyIcons({ favicons: ['favicon-32x32.png'] }),
 			pixel_art: true,
 		});
 		await expect(readPngSize(images[0].contents)).resolves.toEqual({ width: 32, height: 32 });
 	});
+
+	it('preserves positional transforms and buffer access in the legacy image hook', async () => {
+		const generator = new Favigen(logo, onlyIcons({ favicons: ['favicon-32x32.png'] }));
+		const image = await generator.source;
+		expect(image?.getWidth()).toBe(64);
+		expect(await image?.getBufferAsync(JimpMime.png)).toBeInstanceOf(Buffer);
+
+		const afterCreate = jest.fn();
+		await generator.getIcons(afterCreate, (clone, _definition, render) => {
+			expect(clone.greyscale().resize(12, 8).contain(16, 16, ResizeStrategy.NEAREST_NEIGHBOR).getHeight()).toBe(16);
+			expect(clone.resize(12, 8).contain(16, 16, 0).rotate(90).getWidth()).toBe(16);
+			clone.shadow({ opacity: 0.5, x: 0, y: 0 });
+			render();
+		});
+		expect(afterCreate).toHaveBeenCalledTimes(1);
+		const [{ contents }] = afterCreate.mock.calls[0];
+		await expect(readPngSize(contents)).resolves.toEqual({ width: 32, height: 32 });
+	});
+
 });

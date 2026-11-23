@@ -13,6 +13,6 @@
 
 ## Reporting a Vulnerability
 
-Report to security@joshuahemphill.com
+Report to <security@joshuahemphill.com>.
 
 I'll do my best to respond, that's all I can promise.

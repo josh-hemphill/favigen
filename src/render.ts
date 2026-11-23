@@ -1,6 +1,7 @@
 import sharp from 'sharp';
 import { createMemoryCache, notifyCacheError } from './cache.js';
 import type { CacheErrorHandler, IconCache } from './cache.js';
+import { encodeIco } from './ico.js';
 import { imageWork } from './image-work.js';
 import { getTargets } from './plan.js';
 import type { IconPlan, IconSpec, PlaneRecipe } from './plan.js';
@@ -107,25 +108,6 @@ function fromCache (
 	return result;
 }
 
-function encodeIco (planes: Buffer[], sizes: IconSpec['sizes']): Buffer {
-	const directory = Buffer.alloc(6 + planes.length * 16);
-	directory.writeUInt16LE(1, 2);
-	directory.writeUInt16LE(planes.length, 4);
-	let fileOffset = directory.length;
-	for (const [index, plane] of planes.entries()) {
-		const entry = 6 + index * 16;
-		const { width, height } = sizes[index];
-		directory[entry] = width % 256;
-		directory[entry + 1] = height % 256;
-		directory.writeUInt16LE(1, entry + 4);
-		directory.writeUInt16LE(32, entry + 6);
-		directory.writeUInt32LE(plane.length, entry + 8);
-		directory.writeUInt32LE(fileOffset, entry + 12);
-		fileOffset += plane.length;
-	}
-	return Buffer.concat([directory, ...planes], fileOffset);
-}
-
 /** Render one planned asset, reusing shared PNG planes and ICO containers. */
 export async function renderIcon (plan: IconPlan, id: string, context: RenderContext = {}): Promise<RenderedIcon> {
 	const target = getTargets(plan).get(id);
@@ -135,7 +117,13 @@ export async function renderIcon (plan: IconPlan, id: string, context: RenderCon
 		fromCache(cache, context, key, () => queuedRender(target.source, recipe))));
 	const { spec } = target;
 	const bytes = spec.mimeType === 'image/vnd.microsoft.icon'
-		? await fromCache(cache, context, spec.recipeKey, async () => encodeIco(await renderPlanes(), spec.sizes))
+		? await fromCache(cache, context, spec.recipeKey, async () => {
+			const planes = await renderPlanes();
+			// ICO PNG frames require an alpha channel, even on an opaque canvas.
+			const frames = await Promise.all(planes.map((plane, index) =>
+				target.planes[index].recipe.background === 'transparent' ? plane : sharp(plane).ensureAlpha().png().toBuffer()));
+			return encodeIco(frames);
+		})
 		: (await renderPlanes())[0];
 	return Object.freeze({
 		...spec, bytes: Uint8Array.from(bytes), byteLength: bytes.length, digest: digest(bytes),

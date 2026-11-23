@@ -1,4 +1,6 @@
-import Jimp from 'jimp';
+import { HorizontalAlign, Jimp, JimpMime, ResizeStrategy, VerticalAlign } from 'jimp';
+import { legacyImage } from './legacy-image.js';
+import type { LegacyImage } from './legacy-image.js';
 import { IconSize, ResolvedOptions } from './defaults.js';
 import { NormalizedIcons, PngIcons } from './types.js';
 
@@ -29,7 +31,7 @@ export function resolveCanvasBackground (
 /** Resize, pad, and encode one PNG plane for an icon definition. */
 export async function generateIcon (
 	iconDef: IconSize & NormalizedIcons,
-	img: Jimp,
+	img: LegacyImage,
 	options: Pick<ResolvedOptions, 'background' | 'pixel_art'>,
 ): Promise<Buffer> {
 	const width = (iconDef as PngIcons).width;
@@ -42,17 +44,13 @@ export async function generateIcon (
 	const offset = Math.round(Math.max(width, height) * offsetPercent / 100) || 0;
 	const innerWidth = Math.max(1, width - offset * 2);
 	const innerHeight = Math.max(1, height - offset * 2);
-	const pixelArt = options.pixel_art === true;
-	const align = Jimp.HORIZONTAL_ALIGN_CENTER | Jimp.VERTICAL_ALIGN_MIDDLE;
-
-	const fitted = img.clone();
-	if (pixelArt) {
-		fitted.contain(innerWidth, innerHeight, align, Jimp.RESIZE_NEAREST_NEIGHBOR);
-	} else {
-		fitted.contain(innerWidth, innerHeight, align);
-	}
-
-	const canvas = await Jimp.create(width, height, resolveCanvasBackground(iconDef, options));
+	const fitted = img.clone().contain({
+		w: innerWidth,
+		h: innerHeight,
+		align: HorizontalAlign.CENTER | VerticalAlign.MIDDLE,
+		mode: options.pixel_art ? ResizeStrategy.NEAREST_NEIGHBOR : undefined,
+	});
+	const canvas = legacyImage(new Jimp({ width, height, color: resolveCanvasBackground(iconDef, options) }));
 	canvas.composite(fitted, offset, offset);
 
 	if (iconDef.rotate) {
@@ -65,5 +63,5 @@ export async function generateIcon (
 		});
 	}
 
-	return canvas.getBufferAsync(Jimp.MIME_PNG);
+	return canvas.getBuffer(JimpMime.png);
 }

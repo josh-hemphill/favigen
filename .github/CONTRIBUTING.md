@@ -1,4 +1,6 @@
-# Contributing to vite-plugin-favicon
+# Contributing to Favigen
+
+<!-- markdownlint-configure-file { "MD007": { "indent": 2, "start_indented": true } } -->
 
 👍🎉 First off, thanks for taking the time to contribute! 🎉👍
 
@@ -26,31 +28,31 @@ The following is a set of guidelines for contributing. Since these are mostly gu
 
 ### Code of Conduct
 
-This project and everyone participating in it is governed by [the repository's code of conduct](../CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to dev@joshuahemphill.com.
+This project and everyone participating in it is governed by [the repository's code of conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to <dev@joshuahemphill.com>.
 
 ## How Can I Contribute?
 
 ### Reporting bugs
 
-This section guides you through submitting a bug report for vite-plugin-favicon. Following these guidelines helps maintainers and the community understand your report 📝, reproduce the behavior 💻, and find related reports 🔎.
+This section guides you through submitting a bug report for Favigen. Following these guidelines helps maintainers and the community understand your report 📝, reproduce the behavior 💻, and find related reports 🔎.
 
-Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report). Fill out [the required template](https://github.com/josh-hemphill/vite-plugin-favicon/.github/.github/ISSUE_TEMPLATE/bug_report.md), the information it asks for helps us resolve issues faster.
+Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report). Fill out [the required template](ISSUE_TEMPLATE/bug_report.md), the information it asks for helps us resolve issues faster.
 
 #### Before Submitting A Bug Report
 
-  - **Determine** the error or issue happens inside vite-plugin-favicon code, and is not an expected error in response to user input.
-  - **Perform** a [cursory search](https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/vite-plugin-favicon+label%3Abug) to see if the problem has already been reported. If it has and the issue is still open, add a comment to the existing issue instead of opening a new one.
+  - **Determine** the error or issue happens inside Favigen code, and is not an expected error in response to user input.
+  - **Perform** a [cursory search](https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/favigen+label%3Abug) to see if the problem has already been reported. If it has and the issue is still open, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Bug Report?
 
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
   - **Use a clear and descriptive title** for the issue to identify the problem.
-  - **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you invoked vite-plugin-favicon, e.g. which function exactly you used, or how you imported it otherwise. When listing steps, **don't just say what you did, but explain how you did it**. For example, if you used an internal function, don't just say you used it, provide what data you passed it, and if/how it was passed back into other vite-plugin-favicon functions.
+  - **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you invoked Favigen, e.g. which function exactly you used, or how you imported it otherwise. When listing steps, **don't just say what you did, but explain how you did it**. For example, if you used an internal function, don't just say you used it, provide what data you passed it, and if/how it was passed back into other Favigen functions.
   - **Provide specific examples to demonstrate the steps**. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
   - **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
   - **Explain which behavior you expected to see instead and why.**
-  - **If you're reporting that vite-plugin-favicon errored out**, provide the whole stack trace in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines), a [file attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/), or put it in a [gist](https://gist.github.com/) and provide link to that gist.
+  - **If you're reporting that Favigen errored out**, provide the whole stack trace in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines), a [file attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/), or put it in a [gist](https://gist.github.com/) and provide link to that gist.
   - **If the problem is related to performance or memory**, include a benchmark link with your report.
   - **If the problem wasn't triggered by a specific action**, describe what you were doing before the problem happened and share more information using the guidelines below.
 
@@ -69,13 +71,13 @@ Include details about your configuration and environment:
 
 ### Suggesting Enhancements
 
-This section guides you through submitting an enhancement suggestion for vite-plugin-favicon, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:.
+This section guides you through submitting an enhancement suggestion for Favigen, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:.
 
-Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). Fill in [the template](https://github.com/josh-hemphill/vite-plugin-favicon/.github/blob/master/.github/ISSUE_TEMPLATE/feature_request.md), including the steps that you imagine you would take if the feature you're requesting existed.
+Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). Fill in [the template](ISSUE_TEMPLATE/feature_request.md), including the steps that you imagine you would take if the feature you're requesting existed.
 
 #### Before Submitting An Enhancement Suggestion
 
-  - **Perform** a [cursory search](https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/vite-plugin-favicon+label%3Afeature) to see if the problem has already been reported. If it has and the issue is still open, add a comment to the existing issue instead of opening a new one.
+  - **Perform** a [cursory search](https://github.com/issues?utf8=✓&q=is%3Aissue+repo%3Ajosh-hemphill/favigen+label%3Afeature) to see if the problem has already been reported. If it has and the issue is still open, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Enhancement Suggestion?
 
@@ -92,30 +94,33 @@ Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com
 
 ### Your First Code Contribution
 
-Unsure where to begin contributing to vite-plugin-favicon? You can start by looking through these `beginner` and `help-wanted` issues:
+Unsure where to begin contributing to Favigen? You can start by looking through these `beginner` and `help-wanted` issues:
 
   - [Beginner issues][beginner] - issues which should only require a few lines of code, and a test or two.
   - [Help wanted issues][help-wanted] - issues which should be a bit more involved than `beginner` issues.
+
+[beginner]: https://github.com/josh-hemphill/favigen/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+sort%3Acomments-asc
+[help-wanted]: https://github.com/josh-hemphill/favigen/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22+sort%3Acomments-asc
 
 Both issue lists are sorted by total number of comments.
 While not perfect, number of comments is a reasonable proxy for impact a given change will have.
 
 #### Local development
 
-For instructions on how to setup and run development, see the following [Development Guide](https://github.com/josh-hemphill/vite-plugin-favicon/docs/development.md)
+For instructions on how to setup and run development, see the following [Development Guide](../README.md)
 
 ### Pull Requests
 
 The process described here has several goals:
 
-  - Maintain vite-plugin-favicon's quality
+  - Maintain Favigen's quality
   - Fix problems that are important to users
-  - Engage the community in working toward the best possible vite-plugin-favicon
-  - Enable a sustainable system for vite-plugin-favicon's maintainers to review contributions
+  - Engage the community in working toward the best possible Favigen
+  - Enable a sustainable system for Favigen's maintainers to review contributions
 
 Please follow these steps to have your contribution considered by the maintainers:
 
-1. Follow all instructions in [the template](PULL_REQUEST_TEMPLATE.md)
+1. Describe the change and how you verified it.
 2. Follow the [styleguides](#styleguides)
 3. After you submit your pull request, verify that all [status checks](https://help.github.com/articles/about-status-checks/)
 are passing <details><summary>What if the status checks are failing?</summary>
@@ -134,7 +139,7 @@ or other changes before your pull request can be ultimately accepted.
 
 ### Git Commit Messages
 
-Use the dev dependency `commitizen` to walk you through writing good commit messages.
+Use Conventional Commits for commit messages.
 
 ### JavaScript Styleguide
 
@@ -168,7 +173,7 @@ All JavaScript code is linted with [ESLint](https://eslint.org/).
 
   - Include thoughtfully-worded, well-structured
   [Jest](https://jestjs.io/) tests next to their dependant modules.
-  - Include integration, build, and platform tests under the `test/` directory.
+  - Include integration, build, and platform tests under the `tests/` directory.
   - Treat `describe` as a noun or situation.
   - Treat `it` as a statement about state or how an operation changes state.
 
