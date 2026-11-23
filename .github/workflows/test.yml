@@ -7,31 +7,75 @@ on:
             - latest-next
             - next
             - beta
-            - "*.x" # maintenance releases branches
-
+            - "*.x"
     pull_request:
-        types:
-            - opened
-            - synchronize
+        types: [opened, synchronize, reopened, ready_for_review]
+    workflow_dispatch:
+
+permissions:
+    contents: read
 
 jobs:
-    test_matrix:
+    verify:
+        name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
         strategy:
+            fail-fast: false
             matrix:
-                node-version:
-                    - 12
-                    - 14
-                    - 16 # Becomes active in early April 2021
-
-        runs-on: ubuntu-latest
-
+                os: [ubuntu-latest]
+                node-version: [22, 24, 26]
+                include:
+                    - os: macos-latest
+                      node-version: 24
+                    - os: windows-latest
+                      node-version: 24
+        runs-on: ${{ matrix.os }}
         steps:
-            - uses: actions/checkout@v2
-            - run: git config --global user.name github-actions
-            - run: git config --global user.email github-actions@github.com
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v2
+            - uses: actions/checkout@v7.0.1
+            - uses: actions/setup-node@v7.1.0
               with:
                   node-version: ${{ matrix.node-version }}
-            - uses: bahmutov/npm-install@v1
-            - run: npm run test
+                  cache: npm
+            - run: npm ci
+            - run: npm test
+            - run: mkdir artifacts
+            - run: npm pack --pack-destination artifacts
+            - run: node --input-type=module -e "import { prepareSource } from 'favigen'; if (typeof prepareSource !== 'function') process.exit(1)"
+            - run: node -e "if (typeof require('favigen').prepareSource !== 'function') process.exit(1)"
+            - name: Smoke-test the packaged library with WebAssembly
+              if: runner.os == 'Linux' && matrix.node-version == 24
+              shell: bash
+              run: |
+                  scratch=$(mktemp -d)
+                  sharp_version=$(node -p 'require("./package.json").dependencies.sharp')
+                  npm install --prefix "$scratch" --omit=optional --ignore-scripts --no-audit --no-fund "$PWD"/artifacts/*.tgz "@img/sharp-wasm32@$sharp_version"
+                  cd "$scratch"
+                  node --input-type=module <<'NODE'
+                  import assert from 'node:assert/strict';
+                  import sharp from 'sharp';
+                  import { planIcons, prepareSource, renderIcons } from 'favigen';
+                  assert.ok(sharp.versions.emscripten, 'Expected the WebAssembly renderer');
+                  const art = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/></svg>');
+                  const icons = await renderIcons(planIcons(await prepareSource(art), { ids: ['favicon.ico', 'favicon.32'] }));
+                  const ico = Buffer.from(icons[0].bytes);
+                  assert.equal(ico.readUInt16LE(2), 1);
+                  assert.equal(ico.readUInt16LE(4), 3);
+                  assert.equal((await sharp(icons[1].bytes).metadata()).width, 32);
+                  NODE
+            - name: Checksum the package
+              if: runner.os == 'Linux' && matrix.node-version == 24
+              working-directory: artifacts
+              run: sha256sum *.tgz > SHA256SUMS
+            - name: Upload the verified tarball
+              if: runner.os == 'Linux' && matrix.node-version == 24
+              uses: actions/upload-artifact@v7.0.2
+              with:
+                  name: favigen-package
+                  path: artifacts/
+                  if-no-files-found: error
+            - name: Upload test coverage
+              if: runner.os == 'Linux' && matrix.node-version == 24
+              uses: actions/upload-artifact@v7.0.2
+              with:
+                  name: favigen-coverage
+                  path: coverage/lcov.info
+                  if-no-files-found: error

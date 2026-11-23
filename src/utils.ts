@@ -101,3 +101,16 @@ export function resolveTemplateName (
 export function isPositiveNum (num: number | null | undefined): num is number {
 	return !!num && num > 0;
 }
+
+export function hasControlCharacters (value: string): boolean {
+	return Array.from(value).some((character) => {
+		const code = character.charCodeAt(0);
+		return code < 32 || code === 127;
+	});
+}
+
+export function validOutputName (name: string): boolean {
+	return !!name && !hasControlCharacters(name) && name.split('/').every((segment) =>
+		!!segment && !/[. ]$/.test(segment) && !/[\\:"<>|?*#%]/.test(segment)
+		&& !/^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(segment));
+}

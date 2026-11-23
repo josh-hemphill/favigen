@@ -34,6 +34,7 @@ export function getHtmlDefaults (
 	options: Options,
 	iconsMap: IconsMap,
 	enabledPlatforms: ReadonlySet<IconPlatforms>,
+	manifestPlatforms: ReadonlySet<IconPlatforms>,
 ): HtmlTag[] {
 	const tags: HtmlTag[] = [];
 
@@ -65,8 +66,8 @@ export function getHtmlDefaults (
 	}
 
 	if (enabledPlatforms.has('android')) {
-		tags.push(
-			{
+		if (manifestPlatforms.has('android')) {
+			tags.push({
 				platform: 'android',
 				tag: 'link',
 				attrs: {
@@ -74,7 +75,9 @@ export function getHtmlDefaults (
 					href: manifestHref(options.files.android.manifestFileName, options),
 					crossorigin: options.loadManifestWithCredentials ? 'use-credentials' : undefined,
 				},
-			},
+			});
+		}
+		tags.push(
 			{
 				platform: 'android',
 				tag: 'meta',
@@ -198,17 +201,19 @@ export function getHtmlDefaults (
 				},
 			});
 		}
-		tags.push({
-			platform: 'windows',
-			tag: 'meta',
-			attrs: {
-				name: 'msapplication-config',
-				content: manifestHref(options.files.windows.manifestFileName, options),
-			},
-		});
+		if (manifestPlatforms.has('windows')) {
+			tags.push({
+				platform: 'windows',
+				tag: 'meta',
+				attrs: {
+					name: 'msapplication-config',
+					content: manifestHref(options.files.windows.manifestFileName, options),
+				},
+			});
+		}
 	}
 
-	if (enabledPlatforms.has('yandex')) {
+	if (manifestPlatforms.has('yandex')) {
 		tags.push({
 			platform: 'yandex',
 			tag: 'link',

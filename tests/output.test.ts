@@ -30,6 +30,7 @@ describe('independent output channels', () => {
 		expect(files).toStrictEqual([]);
 		expect(images.length).toBeGreaterThanOrEqual(1);
 		expect(html.length).toBeGreaterThanOrEqual(1);
+		expect(html.join('')).not.toContain('rel="manifest"');
 	});
 
 	it('should not generate html when output.html is false', async () => {

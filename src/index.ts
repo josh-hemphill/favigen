@@ -223,6 +223,8 @@ export class Favigen {
 		assertSource(source);
 		this.options = resolveOptions(options);
 		this.source = loadSource(source);
+		// Planning and metadata-only callers may never await the eager legacy decoder.
+		void this.source.catch(() => undefined);
 		const built = buildIconsMap(this.options);
 		this.iconsMap = built.iconsMap;
 		this.enabledPlatforms = built.enabledPlatforms;
@@ -294,9 +296,9 @@ export class Favigen {
 			const resSizedImgs = await resolveAll(sizedImgs);
 			if (!resSizedImgs.length) continue;
 
-			const finalIconImg = resSizedImgs.length === 1
-				? resSizedImgs[0]
-				: await toIco(resSizedImgs);
+			const finalIconImg = iconDef.type === 'ico'
+				? await toIco(resSizedImgs)
+				: resSizedImgs[0];
 
 			const iconResult: IconResult = {
 				name: iconDef.name || fileName,
@@ -326,7 +328,10 @@ export class Favigen {
 	}
 
 	getHtmlTags (): HtmlTag[] {
-		return getHtmlDefaults(this.options, this.iconsMap, this.enabledPlatforms);
+		const manifestPlatforms = new Set(this.options.output.files
+			? getManifestDefaults(this.options, this.iconsMap).map((manifest) => manifest.platform)
+			: []);
+		return getHtmlDefaults(this.options, this.iconsMap, this.enabledPlatforms, manifestPlatforms);
 	}
 
 	getHtml (): string[] {
@@ -369,3 +374,18 @@ export type {
 	UserOptions,
 };
 export type { IconPlatforms } from './defaults.js';
+
+export { prepareSource } from './source.js';
+export type { IconSource, PreparedSource } from './source.js';
+export { planIcons } from './plan.js';
+export type {
+	IconDiagnostic, IconOverride, IconPlan, IconPurpose, IconRole, IconSpec, PlanOptions, RenderOptions,
+} from './plan.js';
+export { renderIcon, renderIcons } from './render.js';
+export type { BatchRenderContext, RenderContext, RenderedIcon } from './render.js';
+export { createDiskCache, createMemoryCache } from './cache.js';
+export type { DiskCacheOptions, IconCache } from './cache.js';
+export { bindIcons, buildBasicManifest, iconTags, manifestIcons } from './publication.js';
+export type {
+	BasicManifest, BasicManifestOptions, IconBinding, IconLinkTag, IconPublication, ManifestIcon, ManifestIconOptions, PublishedIcon,
+} from './publication.js';
