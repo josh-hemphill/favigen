@@ -8,8 +8,8 @@ describe('independent output channels', () => {
 	});
 
 	const platforms = onlyIcons({
-		android: true,
-		favicons: true,
+		android: ['android-chrome-192x192.png'],
+		favicons: ['favicon-32x32.png'],
 	});
 
 	it('should not generate images when output.images is false', async () => {
